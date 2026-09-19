@@ -1,7 +1,7 @@
 {
   "name": "RAS GARUDA",
   "version": "1.0.0",
-  "homepage": "https://reichsgraf.github.io/ras-garuda/",
+  "homepage": "https://reichsgraf.github.io/report-attunement-servitor-garuda/",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
