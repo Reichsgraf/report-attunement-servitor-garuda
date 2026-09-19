@@ -34,7 +34,20 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 })
 export class App implements OnInit {
   protected formGroup: FormGroup;
-  protected uavOptions = ['AS 3', 'Grey Widow', 'Sting', 'VB140 Блискавка', 'F7 LITAVR', 'БАГНЕТ-АА', 'P1SUN'].sort()
+  protected uavOptions = [
+    'ГЕНЕРАЛ ЧЕРЕШНЯ МОД 1',
+    'ГЕНЕРАЛ ЧЕРЕШНЯ МОД 2',
+    'SPOOK 10',
+    'BLINK 10',
+    'ORTUS TFT-K 10',
+    'ORTUS TF-K 10',
+    'STING ПЕРЕХОПЛЮВАЧ',
+    'ПЕГАС 10',
+    'ПЕГАС 10 ТК'
+  ].sort()
+  protected resultOptions = ['придушення', 'виведення з ладу', 'знищення', 'втрата']
+  protected warheadOptions = []
+  protected detonatorOptions = ['', 'ЕД-8-ж', 'ЕДП-р']
 
   constructor(
     private clipboard: Clipboard,
@@ -43,14 +56,20 @@ export class App implements OnInit {
     const currentDate: Date = new Date();
 
     this.formGroup = new FormGroup({
+      unitName: new FormControl(''),
       crewName: new FormControl(''),
-      uav: new FormControl(''),
-      targetNumber: new FormControl(''),
-      startLocation: new FormControl(''),
-      startDate: new FormControl(currentDate),
-      endLocation: new FormControl(''),
-      endDate: new FormControl(currentDate),
+      date: new FormControl(currentDate),
+      target: new FormControl(''),
+      coordinates: new FormControl(''),
+      location: new FormControl(''),
+      distance: new FormControl(''),
       result: new FormControl(''),
+
+      uav: new FormControl(''),
+      warhead: new FormControl(''),
+      detonator: new FormControl(''),
+
+      comment: new FormControl(''),
     });
   }
 
@@ -63,36 +82,43 @@ export class App implements OnInit {
     this.formGroup.get(controlName)?.setValue(currentDate);
   }
 
-  startFlight() {
-    const startDateTime = this.formatDateTime("startDate")
-    this.clipboard.copy(
-      `Тип: БпЛА літакового типу\n` +
-      `Екіпаж: ${this.formGroup.get("crewName")?.value}\n` +
-      `Коментар: ${this.formGroup.get("targetNumber")?.value}\n` +
-      `Час: ${startDateTime}\n` +
-      `${this.formGroup.get("uav")?.value}\n` +
-      `${this.formGroup.get("startLocation")?.value}`
-    );
-  }
-
   endFlight() {
-    const starDateTime = this.formatDateTime("startDate")
-    const endDateTime = this.formatDateTime("endDate")
-    this.clipboard.copy(
-      `Тип: БпЛА літакового типу\n` +
+    const date = this.formatMissionDate("date")
+    const time = this.formatMissionTime("date")
+    let report_message =
+      `Підрозділ: ${this.formGroup.get("unitName")?.value}\n` +
       `Екіпаж: ${this.formGroup.get("crewName")?.value}\n` +
-      `Коментар: ${this.formGroup.get("targetNumber")?.value}\n` +
-      `Час: ${starDateTime}\n` +
-      `Час: ${endDateTime}\n` +
-      `${this.formGroup.get("uav")?.value}\n` +
-      `${this.formGroup.get("startLocation")?.value}\n` +
-      `${this.formGroup.get("result")?.value}\n` +
-      `${this.formGroup.get("endLocation")?.value}`
-    );
+      `Дата: ${date}\n` +
+      `Час застосування: ${time}\n` +
+      `Тип цілі: ${this.formGroup.get("target")?.value}\n` +
+      `Координати: ${this.formGroup.get("coordinates")?.value}\n` +
+      `р.н.п. ${this.formGroup.get("location")?.value}\n`
+    if (this.formGroup.get("distance")?.value) {
+      report_message += `Відстань: ${this.formGroup.get("distance")?.value.replace("км", "").trim()} км\n`
+    }
+    report_message +=
+      `Результат: ${this.formGroup.get("result")?.value}\n` +
+      `Засіб ураження: ${this.formGroup.get("uav")?.value}\n`
+    if (this.formGroup.get("warhead")?.value) {
+      report_message += `Бойова частина: ${this.formGroup.get("warhead")?.value}\n`
+    }
+    if (this.formGroup.get("detonator")?.value) {
+      report_message += `Детонатор: ${this.formGroup.get("detonator")?.value}\n`
+    }
+    if (this.formGroup.get("comment")?.value) {
+      report_message += `\n${this.formGroup.get("comment")?.value}\n`
+    }
+
+    this.clipboard.copy(report_message);
   }
 
-  formatDateTime(dateControlName: string) {
+  formatMissionDate(dateControlName: string) {
     const dateTime = new Date(this.formGroup.get(dateControlName)?.value)
-    return formatDate(dateTime, "dd.MM.yyyy HH:mm", this.locale)
+    return formatDate(dateTime, "dd.MM.yyyy", this.locale)
+  }
+
+  formatMissionTime(dateControlName: string) {
+    const dateTime = new Date(this.formGroup.get(dateControlName)?.value)
+    return formatDate(dateTime, "HH:mm", this.locale)
   }
 }

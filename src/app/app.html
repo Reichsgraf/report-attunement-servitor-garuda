@@ -2,9 +2,75 @@
   <div class="form-generator">
     <form class="form" [formGroup]="formGroup">
       <mat-form-field>
+        <mat-label>Підрозділ</mat-label>
+        <input [formControlName]="'unitName'"
+               matInput placeholder="Назва вашого підрозділу" value="">
+      </mat-form-field>
+
+      <mat-form-field>
         <mat-label>Екіпаж</mat-label>
         <input [formControlName]="'crewName'"
                matInput placeholder="Назва вашого екіпажу" value="">
+      </mat-form-field>
+
+      <div class="date-row">
+        <mat-form-field style="grid-area: d">
+          <mat-label>Дата застосування</mat-label>
+          <input [formControlName]="'date'"
+                 matInput [matDatepicker]="spicker" placeholder="ДД.ММ.ГГГГ">
+          <mat-datepicker-toggle matIconSuffix [for]="spicker"></mat-datepicker-toggle>
+          <mat-datepicker #spicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field style="grid-area: t">
+          <mat-label>Час застосування</mat-label>
+          <input matInput
+                 [matTimepicker]="stimepicker"
+                 [formControlName]="'date'">
+          <mat-timepicker #stimepicker/>
+          <mat-timepicker-toggle [for]="stimepicker" matSuffix/>
+        </mat-form-field>
+
+        <button style="grid-area: b" matButton="filled" (click)="setCurrentTime('date')">Поточний час</button>
+      </div>
+
+      <mat-form-field>
+        <mat-label>Ціль</mat-label>
+        <input [formControlName]="'target'"
+               matInput placeholder="Тип цілі (СП, укриття, інше)." value="">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Координати</mat-label>
+        <input [formControlName]="'coordinates'"
+               matInput placeholder="Координати в форматі MGRS." value="">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Населений пункт</mat-label>
+        <input [formControlName]="'location'"
+               matInput placeholder="Назва н.п., в районі якого пройшло застосування." value="">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Відстань</mat-label>
+        <input [formControlName]="'distance'"
+               matInput placeholder="Відстань від позиції до точки застосування." value="">
+      </mat-form-field>
+
+      <mat-form-field class="example-full-width">
+        <mat-label>Результат</mat-label>
+        <input type="text"
+               placeholder="Виберіть результат застосування"
+               aria-label="Результат"
+               matInput
+               [formControlName]="'result'"
+               [matAutocomplete]="autoResult">
+        <mat-autocomplete #autoResult="matAutocomplete">
+          @for (option of resultOptions; track option) {
+          <mat-option [value]="option">{{option}}</mat-option>
+          }
+        </mat-autocomplete>
       </mat-form-field>
 
       <mat-form-field class="example-full-width">
@@ -14,8 +80,8 @@
                aria-label="Борт"
                matInput
                [formControlName]="'uav'"
-               [matAutocomplete]="auto">
-        <mat-autocomplete #auto="matAutocomplete">
+               [matAutocomplete]="autoUAV">
+        <mat-autocomplete #autoUAV="matAutocomplete">
           @for (option of uavOptions; track option) {
             <mat-option [value]="option">{{option}}</mat-option>
           }
@@ -23,76 +89,44 @@
       </mat-form-field>
 
       <mat-form-field>
-        <mat-label>Номер цілі</mat-label>
-        <input [formControlName]="'targetNumber'"
-               matInput placeholder="Номер цілі відповідно до віражу, у інших випадках вказуйте джерело в дужках після номера." value="">
+        <mat-label>Боєприпас</mat-label>
+        <input type="text"
+               placeholder="Виберіть використану БЧ"
+               aria-label="Боєприпас"
+               matInput
+               [formControlName]="'warhead'"
+               [matAutocomplete]="autoWarhead">
+        <mat-autocomplete #autoWarhead="matAutocomplete">
+          @for (option of warheadOptions; track option) {
+          <mat-option [value]="option">{{option}}</mat-option>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field class="example-full-width">
+        <mat-label>Детонатор</mat-label>
+        <input type="text"
+               placeholder="Виберіть використаний детонатор"
+               aria-label="Детонатор"
+               matInput
+               [formControlName]="'detonator'"
+               [matAutocomplete]="autoDetonator">
+        <mat-autocomplete #autoDetonator="matAutocomplete">
+          @for (option of detonatorOptions; track option) {
+          <mat-option [value]="option">{{option}}</mat-option>
+          }
+        </mat-autocomplete>
       </mat-form-field>
 
       <mat-form-field>
-        <mat-label>Місце початку польоту</mat-label>
-        <input [formControlName]="'startLocation'"
-               matInput placeholder="Назва населеного пункту, біля якого виконувався зліт." value="">
-      </mat-form-field>
-
-      <div class="date-row">
-        <mat-form-field style="grid-area: d">
-          <mat-label>Дата початку польоту</mat-label>
-          <input [formControlName]="'startDate'"
-                 matInput [matDatepicker]="spicker" placeholder="ДД.ММ.ГГГГ">
-          <mat-datepicker-toggle matIconSuffix [for]="spicker"></mat-datepicker-toggle>
-          <mat-datepicker #spicker></mat-datepicker>
-        </mat-form-field>
-
-        <mat-form-field style="grid-area: t">
-          <mat-label>Час початку польоту</mat-label>
-          <input matInput
-                 [matTimepicker]="stimepicker"
-                 [formControlName]="'startDate'">
-          <mat-timepicker #stimepicker/>
-          <mat-timepicker-toggle [for]="stimepicker" matSuffix/>
-        </mat-form-field>
-
-        <button style="grid-area: b" matButton="filled" (click)="setCurrentTime('startDate')">Поточний час</button>
-      </div>
-
-      <mat-form-field>
-        <mat-label>Місце закінчення польоту</mat-label>
-        <input [formControlName]="'endLocation'"
-               matInput placeholder="Назва населеного пункту, біля якого борт було посажено/втрачено, або знищено ціль." value="">
-      </mat-form-field>
-
-      <div class="date-row">
-        <mat-form-field style="grid-area: d">
-          <mat-label>Дата закінчення польоту</mat-label>
-          <input [formControlName]="'endDate'"
-                 matInput [matDatepicker]="epicker" placeholder="ДД.ММ.ГГГГ">
-          <mat-datepicker-toggle matIconSuffix [for]="epicker"></mat-datepicker-toggle>
-          <mat-datepicker #epicker></mat-datepicker>
-        </mat-form-field>
-
-        <mat-form-field style="grid-area: t">
-          <mat-label>Час закінчення польоту</mat-label>
-          <input matInput
-                 [matTimepicker]="etimepicker"
-                 [formControlName]="'endDate'">
-          <mat-timepicker #etimepicker/>
-          <mat-timepicker-toggle [for]="etimepicker" matSuffix/>
-        </mat-form-field>
-
-        <button style="grid-area: b" matButton="filled" (click)="setCurrentTime('endDate')">Поточний час</button>
-      </div>
-
-      <mat-form-field>
-        <mat-label>Результат польоту</mat-label>
-        <textarea [formControlName]="'result'"
-                  matInput placeholder="Результат польоту. Наприклад, «Ціль знищено, ціль — Гербера».">
+        <mat-label>Коментар</mat-label>
+        <textarea [formControlName]="'comment'"
+                  matInput placeholder="Додаткові коментарі (до результату) та склад екіпажу.">
         </textarea>
       </mat-form-field>
 
       <div class="button-container">
-        <button matButton="filled" (click)="startFlight()">Почати політ</button>
-
-        <button matButton="filled" (click)="endFlight()">Завершити політ</button>
+        <button matButton="filled" (click)="endFlight()">Створити звіт</button>
       </div>
     </form>
   </div>

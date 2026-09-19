@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "report-attunement-servitor": {
+    "report-attunement-servitor-garuda": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/report-attunement-servitor",
+            "outputPath": "dist/report-attunement-servitor-garuda",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
@@ -29,7 +29,11 @@
             ],
             "styles": [
               "src/custom-theme.scss",
-              "src/styles.scss"
+              "src/styles.scss",
+              "@fontsource/roboto/300.css",
+              "@fontsource/roboto/400.css",
+              "@fontsource/roboto/500.css",
+              "node_modules/material-icons/iconfont/material-icons.css"
             ],
             "scripts": []
           },
@@ -38,8 +42,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "1MB",
+                  "maximumError": "2MB"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -61,10 +65,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "report-attunement-servitor:build:production"
+              "buildTarget": "report-attunement-servitor-garuda:build:production"
             },
             "development": {
-              "buildTarget": "report-attunement-servitor:build:development"
+              "buildTarget": "report-attunement-servitor-garuda:build:development"
             }
           },
           "defaultConfiguration": "development"
