@@ -1,8 +1,7 @@
-import {Component, Inject, LOCALE_ID, OnInit} from '@angular/core';
+import {Component, Inject, LOCALE_ID, OnInit, Signal, signal, computed} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
-import { MatDatepickerModule,
-} from '@angular/material/datepicker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import {MAT_DATE_LOCALE, provideNativeDateAdapter} from '@angular/material/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatTimepickerModule} from '@angular/material/timepicker';
@@ -11,6 +10,7 @@ import {MatButton} from '@angular/material/button';
 import { Clipboard } from '@angular/cdk/clipboard';
 import {formatDate} from '@angular/common';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-root',
@@ -46,8 +46,45 @@ export class App implements OnInit {
     'ПЕГАС 10 ТК'
   ].sort()
   protected resultOptions = ['придушення', 'виведення з ладу', 'знищення', 'втрата']
-  protected warheadOptions = []
+  protected warheadOptions = [
+    'ЗБ-500',
+    'ЗБ Корсар',
+    'ГРУТ-С',
+    'HFB0500C',
+    'HFB0600F',
+    'БНПП-40',
+    'БНПП-40М',
+    'КО-1.3 Пузатий змій',
+    'МАБ-Л1.5 Ое',
+    'МБ-50КУЗ МАЛЮК',
+    'МОА-Композит 61',
+    'МОН-100.1',
+    'ОГ-Б1 2,8кг',
+    'ПВВ-7-1',
+    'ПВР Кемікс 200г',
+    'ПВР Семтекс 10 500г',
+    'ПГ-7Л',
+    'СВП Запальничка',
+    'СВП для ППО ДВІЖУХА',
+    'СВП напалм 1,5кг',
+    'СВП напалм 1кг',
+    'СВП уламково-фугасний 1кг',
+    'СВП уламок 0,2кг',
+    'СВП фугасний 1кг',
+    'СВП фугасно-запалювальний 1,6кг',
+    'Терміт 0,9кг',
+    'УАБК-1.5-А',
+    'УЯ-У-65-0.5',
+    'УЯ-У-65-1.3',
+    'уламковий кругового ураження 1,2кг',
+    'фугасний Bullet 0.5кг',
+    'фугасний Sting 0.5кг',
+    'фугасний кемікс 0.5кг',
+  ].sort()
   protected detonatorOptions = ['', 'ЕД-8-ж', 'ЕДП-р']
+
+  filteredUavOptions!: Signal<string[]>;
+  filteredWarheadOptions!: Signal<string[]>;
 
   constructor(
     private clipboard: Clipboard,
@@ -70,6 +107,30 @@ export class App implements OnInit {
       detonator: new FormControl(''),
 
       comment: new FormControl(''),
+    });
+
+    const uavValue = toSignal(
+      this.formGroup.get('uav')!.valueChanges,
+      { initialValue: '' }
+    );
+
+    this.filteredUavOptions = computed(() => {
+      const value = (uavValue() ?? '').toLowerCase();
+      return this.uavOptions.filter(option =>
+        option.toLowerCase().includes(value)
+      );
+    });
+
+    const warheadValue = toSignal(
+      this.formGroup.get('warhead')!.valueChanges,
+      { initialValue: '' }
+    );
+
+    this.filteredWarheadOptions = computed(() => {
+      const value = (warheadValue() ?? '').toLowerCase();
+      return this.warheadOptions.filter(option =>
+        option.toLowerCase().includes(value)
+      );
     });
   }
 

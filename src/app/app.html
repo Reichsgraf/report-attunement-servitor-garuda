@@ -82,7 +82,7 @@
                [formControlName]="'uav'"
                [matAutocomplete]="autoUAV">
         <mat-autocomplete #autoUAV="matAutocomplete">
-          @for (option of uavOptions; track option) {
+          @for (option of filteredUavOptions(); track option) {
             <mat-option [value]="option">{{option}}</mat-option>
           }
         </mat-autocomplete>
@@ -97,7 +97,7 @@
                [formControlName]="'warhead'"
                [matAutocomplete]="autoWarhead">
         <mat-autocomplete #autoWarhead="matAutocomplete">
-          @for (option of warheadOptions; track option) {
+          @for (option of filteredWarheadOptions(); track option) {
           <mat-option [value]="option">{{option}}</mat-option>
           }
         </mat-autocomplete>
